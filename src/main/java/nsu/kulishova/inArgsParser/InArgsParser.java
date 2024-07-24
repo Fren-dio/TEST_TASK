@@ -1,11 +1,10 @@
 package nsu.kulishova.inArgsParser;
 
 import nsu.kulishova.Exceptions.InputFlagsExceptions.*;
+import nsu.kulishova.Security.ResultPathValid;
 import nsu.kulishova.TextMainMenu;
 
 public class InArgsParser {
-
-    private ReceivedFlags receivedFlags;
     private boolean s_flag;
     private boolean f_flag;
     private boolean a_flag;
@@ -23,11 +22,8 @@ public class InArgsParser {
      */
     private boolean isCorrect(String[] args) throws NoInputFilesException, BriefStaticFlagException,
             FullStaticFlagException, WriteToExistFilesFlagException, SetPathToResultFlagException,
-            ReceivedInputFileFlagException, MoreInputFilesException {
-        if (isAllFlagsInInput(args))
-            return checkInputCorrectAllFlags(args);
-        return checkInputCorrectNoAllFlags(args);
-        //return false;
+            ReceivedInputFileFlagException, MoreInputFilesException, InvalidResultPathException {
+        return checkInputCorrectFlags(args);
     }
 
     private boolean isAllFlagsInInput(String[] args)
@@ -53,9 +49,9 @@ public class InArgsParser {
     }
 
 
-    private boolean checkInputCorrectNoAllFlags(String[] args) throws BriefStaticFlagException,
+    private boolean checkInputCorrectFlags(String[] args) throws BriefStaticFlagException,
             FullStaticFlagException, WriteToExistFilesFlagException, SetPathToResultFlagException,
-            ReceivedInputFileFlagException {
+            ReceivedInputFileFlagException, InvalidResultPathException {
         s_flag = false;
         f_flag = false;
         a_flag = false;
@@ -65,17 +61,17 @@ public class InArgsParser {
         {
             if (args[i].equals("-s")) {
                 if (args[i].equals("-s")) s_flag = true;
-                if (!((i < args.length - 1) && (args[i + 1].contains("-"))))
+                if (!((i < args.length - 2) ))
                     throw new BriefStaticFlagException();
             }
             if (args[i].equals("-f")) {
                 if (args[i].equals("-f")) f_flag = true;
-                if (!((i < args.length - 1) && (args[i + 1].contains("-"))))
+                if (!((i < args.length - 2) ))
                     throw new FullStaticFlagException();
             }
             if (args[i].equals("-a")) {
                 if (args[i].equals("-a")) a_flag = true;
-                if (!((i < args.length - 1) && (args[i + 1].contains("-"))))
+                if (!((i < args.length - 2) ))
                     throw new WriteToExistFilesFlagException();
             }
             if (args[i].equals("-o"))
@@ -83,6 +79,8 @@ public class InArgsParser {
                 if (args[i].equals("-o")) o_flag = true;
                 if (!((i < args.length - 1) && (!(args[i + 1].contains("-")))))
                     throw new SetPathToResultFlagException();
+                if (!((new ResultPathValid()).isResultPathCorrect(args[i+1])))
+                    throw (new InvalidResultPathException());
                 else
                     resultPath = args[i+1];
             }
@@ -101,82 +99,9 @@ public class InArgsParser {
     }
 
 
-    private boolean checkInputCorrectAllFlags(String[] args) throws BriefStaticFlagException,
-            FullStaticFlagException, WriteToExistFilesFlagException, SetPathToResultFlagException,
-            ReceivedInputFileFlagException, NoInputFilesException, MoreInputFilesException
-    {
-        int i = 0;
-        s_flag = false;
-        f_flag = false;
-        a_flag = false;
-        o_flag = false;
-        p_flag = false;
-
-        while (i<args.length)
-        {
-            if (args[i].equals("-s")) {
-                if (args[i].equals("-s")) s_flag = true;
-                if (!((i < args.length - 1) && (args[i + 1].contains("-")))) {
-                    throw new BriefStaticFlagException();
-                }
-                else i++;
-            }
-            if (args[i].equals("-f")) {
-                if (args[i].equals("-f")) f_flag = true;
-                if (!((i < args.length - 1) && (args[i + 1].contains("-")))){
-                    throw new FullStaticFlagException();
-                }
-                else i++;
-            }
-            if (args[i].equals("-a")) {
-                if (args[i].equals("-a")) a_flag = true;
-                if (!((i < args.length - 1) && (args[i + 1].contains("-")))){
-                    throw new WriteToExistFilesFlagException();
-                }
-                else i++;
-            }
-            if (args[i].equals("-o"))
-            {
-                if (args[i].equals("-o")) o_flag = true;
-                if (!((i < args.length - 1) && (!(args[i + 1].contains("-"))))){
-                    throw new SetPathToResultFlagException();
-                }
-                else
-                {
-                    resultPath = args[i+1];
-                    i+=2;
-                }
-            }
-            if (args[i].equals("-p"))
-            {
-                if (args[i].equals("-p")) p_flag = true;
-                if (!((i < args.length - 1) && (!(args[i + 1].contains("-"))))){
-                    throw new ReceivedInputFileFlagException();
-                }
-                else {
-                    genericOutputFiles = args[i+1];
-                    i+=2;
-                }
-            }
-            if ((s_flag || f_flag) && a_flag && o_flag && p_flag)
-                break;
-        }
-
-        if (args.length - i < 2)
-            throw new NoInputFilesException();
-        if (args.length - i > 2)
-            throw new MoreInputFilesException();
-        inputFile1 = args[i];
-        inputFile2 = args[i+1];
-
-        return true;
-    }
-
-    public void parserInFlags(String[] args) throws NoInputFilesException, BriefStaticFlagException,
+    public void parserInFlags(String[] args, ReceivedFlags receivedFlags) throws NoInputFilesException, BriefStaticFlagException,
             FullStaticFlagException, ReceivedInputFileFlagException, WriteToExistFilesFlagException,
-            SetPathToResultFlagException, MoreInputFilesException
-    {
-        receivedFlags = new ReceivedFlags();
+            SetPathToResultFlagException, MoreInputFilesException, InvalidResultPathException {
         TextMainMenu textMainMenu = new TextMainMenu();
         if (args.length == 2 && args[1].equals("more")) {
             textMainMenu.getMoreInfo();
@@ -200,6 +125,13 @@ public class InArgsParser {
                 textMainMenu.getMenu();
             }
         }
+    }
+
+
+
+    private void checkIsResultPathValid(String resultPath) throws InvalidResultPathException {
+        if (!((new ResultPathValid()).isResultPathCorrect(resultPath)))
+            throw new InvalidResultPathException();
     }
 
 
