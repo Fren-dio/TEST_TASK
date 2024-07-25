@@ -2,5 +2,8 @@ Lorem ipsum dolor sit amet
 45
 Пример
 consectetur adipiscing
+1.528535047E-25
+3.1415
+-0.001
 тестовое задание
 100500

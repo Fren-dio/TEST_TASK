@@ -19,17 +19,17 @@ public class FullStatic {
     Add information for brief statistic for integer
      */
     private boolean intIsEmpty;
-    private Integer minIntegerValue;
-    private Integer maxIntegerValue;
-    private Integer summaryIntegerValue;
-    private Float averageIntegerValue;
+    private String minIntegerValue;
+    private String maxIntegerValue;
+    private String summaryIntegerValue;
+    private String averageIntegerValue;
 
     public void setIntIsEmpty(boolean flag)
     {
         intIsEmpty = flag;
     }
 
-    public void setInteger(Integer minElem, Integer maxElem, Integer summary, Float average)
+    public void setInteger(String minElem, String maxElem, String summary, String average)
     {
         minIntegerValue = minElem;
         maxIntegerValue = maxElem;
@@ -41,17 +41,17 @@ public class FullStatic {
         Add information for brief statistic for float
          */
     private boolean floatIsEmpty;
-    private Float minFloatValue;
-    private Float maxFloatValue;
-    private Float summaryFloatValue;
-    private Float averageFloatValue;
+    private String minFloatValue;
+    private String maxFloatValue;
+    private String summaryFloatValue;
+    private String averageFloatValue;
 
     public void setFloatIsEmpty(boolean flag)
     {
         floatIsEmpty = flag;
     }
 
-    public void setFloat(Float minElem, Float maxElem, Float summary, Float average)
+    public void setFloat(String minElem, String maxElem, String summary, String average)
     {
         minFloatValue = minElem;
         maxFloatValue = maxElem;
@@ -64,16 +64,16 @@ public class FullStatic {
     Add information for brief statistic for strings
      */
     private boolean stringIsEmpty;
-    private Integer minLengthString ;
+    private String minLengthString ;
     private String minString;
-    private Integer maxLengthString;
+    private String maxLengthString;
     private String maxString;
 
     public void setStringIsEmpty(boolean flag)
     {
         stringIsEmpty = flag;
     }
-    public void setString(Integer minElem, Integer maxElem, String minStr, String maxStr)
+    public void setString(String minElem, String maxElem, String minStr, String maxStr)
     {
         minLengthString = minElem;
         minString = minStr;

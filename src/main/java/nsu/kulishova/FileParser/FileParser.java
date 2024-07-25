@@ -6,6 +6,8 @@ import nsu.kulishova.FileParser.Statistics.FullStatic;
 import nsu.kulishova.inArgsParser.ReceivedFlags;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 public class FileParser {
@@ -129,53 +131,59 @@ public class FileParser {
 
     private void collectContentForFullIntegerStatistic(ArrayList<String> integersResultList)
     {
-        int minElem = Integer.parseInt(integersResultList.get(0));
-        int maxElem = Integer.parseInt(integersResultList.get(0));
-        int sumElems = 0;
+        BigInteger minElem = BigInteger.valueOf(Long.parseLong((integersResultList.get(0))));
+        //int minElem = Integer.parseInt(integersResultList.get(0));
+        BigInteger maxElem = BigInteger.valueOf(Long.parseLong(integersResultList.get(0)));
+        BigInteger sumElems = BigInteger.valueOf(0);
         for (String s : integersResultList) {
-            if (minElem > Integer.parseInt(s))
-                minElem = Integer.parseInt(s);
-            if (maxElem < Integer.parseInt(s))
-                maxElem = Integer.parseInt(s);
-            sumElems += Integer.parseInt(s);
+            if (minElem.compareTo(BigInteger.valueOf(Long.parseLong((s)))) > 0)
+                minElem = BigInteger.valueOf(Long.parseLong((s)));
+            if (maxElem.compareTo(BigInteger.valueOf(Long.parseLong((s)))) < 0)
+                maxElem = BigInteger.valueOf(Long.parseLong((s)));
+            sumElems = sumElems.add(BigInteger.valueOf(Long.parseLong((s))));
         }
-        fullStatic.setInteger(minElem, maxElem, sumElems, (float) (sumElems/(integersResultList.size())));
+        int size = integersResultList.size();
+        fullStatic.setInteger(minElem.toString(), maxElem.toString(), sumElems.toString(),
+                (sumElems.divide(BigInteger.valueOf(size))).toString());
     }
 
 
     private void collectContentForFullFloatStatistic(ArrayList<String> floatsResultList)
     {
-        float minElem = Float.parseFloat((floatsResultList.get(0)));
-        float maxElem = Float.parseFloat(floatsResultList.get(0));
-        float sumElems = 0;
+        BigDecimal minElem = BigDecimal.valueOf(Double.parseDouble((floatsResultList.get(0))));
+        BigDecimal maxElem = BigDecimal.valueOf(Double.parseDouble(floatsResultList.get(0)));
+        BigDecimal sumElems = BigDecimal.valueOf(0.0);
         for (String s : floatsResultList) {
-            if (minElem > Integer.parseInt(s))
-                minElem = Integer.parseInt(s);
-            if (maxElem < Integer.parseInt(s))
-                maxElem = Integer.parseInt(s);
-            sumElems += Integer.parseInt(s);
+                if (minElem.compareTo(BigDecimal.valueOf(Double.parseDouble(s))) > 0)
+                    minElem = BigDecimal.valueOf(Double.parseDouble(s));
+                if (maxElem.compareTo(BigDecimal.valueOf(Double.parseDouble(s))) < 0)
+                    maxElem = BigDecimal.valueOf(Double.parseDouble(s));
+                sumElems = sumElems.add(BigDecimal.valueOf(Double.parseDouble(s)));
+
         }
-        fullStatic.setFloat(minElem, maxElem, sumElems, (float) (sumElems/(floatsResultList.size())));
+        int size = floatsResultList.size();
+        fullStatic.setFloat(minElem.toString(), maxElem.toString(), sumElems.toString(),
+                (sumElems.divide(BigDecimal.valueOf(size), BigDecimal.ROUND_UP)).toString());
     }
 
 
     private void collectContentForFullStringStatistic(ArrayList<String> floatsResultList)
     {
-        int minElem = integersResultList.get(0).length();
+        BigInteger minElem = BigInteger.valueOf(integersResultList.get(0).length());
         String minStr = "";
-        int maxElem = integersResultList.get(0).length();
+        BigInteger maxElem = BigInteger.valueOf(integersResultList.get(0).length());
         String maxStr = "";
         for (String s : floatsResultList) {
-            if (minElem > s.length()) {
-                minElem = s.length();
+            if (minElem.compareTo(BigInteger.valueOf(s.length())) > 0) {
+                minElem = BigInteger.valueOf(s.length());
                 minStr = s;
             }
-            if (maxElem < s.length()) {
-                maxElem = s.length();
+            if (maxElem.compareTo(BigInteger.valueOf(s.length())) < 0) {
+                maxElem = BigInteger.valueOf(s.length());
                 maxStr = s;
             }
         }
-        fullStatic.setString(minElem, maxElem, minStr, maxStr);
+        fullStatic.setString(minElem.toString(), maxElem.toString(), minStr, maxStr);
     }
 
 

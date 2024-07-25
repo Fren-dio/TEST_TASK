@@ -19,6 +19,7 @@ public class Main {
             InArgsParser inArgsParser = new InArgsParser();
             inArgsParser.parserInFlags(args, receivedFlags);
 
+
             FileParser fileParser = new FileParser(briefStatic, fullStatic);
             fileParser.parseFile(receivedFlags);
 
@@ -31,6 +32,7 @@ public class Main {
             {
                 System.out.println((fileParser.getFullStaticFromParser()).getFullStatic());
             }
+
         }
         catch(Exception exception)
         {
